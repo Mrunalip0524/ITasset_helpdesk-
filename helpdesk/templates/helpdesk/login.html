@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Ticketing | Login</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 20% 20%,
+                    #4e52bd,
+                    transparent 35%
+                ),
+
+                radial-gradient(
+                    circle at 80% 80%,
+                    #8d55c8,
+                    transparent 35%
+                ),
+
+                #111936;
+
+        }
+
+
+        .login-box {
+
+            width: 410px;
+
+            padding: 40px;
+
+            border-radius: 25px;
+
+            background:
+                rgba(255,255,255,0.96);
+
+            box-shadow:
+                0 30px 70px
+                rgba(0,0,0,0.25);
+
+        }
+
+
+        .logo {
+
+            text-align: center;
+
+            font-size: 34px;
+
+            font-weight: 800;
+
+            color: #252b57;
+
+        }
+
+
+        .logo span {
+
+            color: #6b65df;
+
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #8b91a7;
+
+            font-size: 13px;
+
+            margin-top: 6px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .field {
+
+            margin-bottom: 18px;
+
+        }
+
+
+        label {
+
+            display: block;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            color: #50566d;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border:
+                1px solid #e2e5f0;
+
+            border-radius: 11px;
+
+            outline: none;
+
+            background: #fafbff;
+
+        }
+
+
+        input:focus {
+
+            border-color: #686be0;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(104,107,224,0.1);
+
+        }
+
+
+        button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #5d63df,
+                    #855edc
+                );
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            margin-top: 8px;
+
+        }
+
+
+        button:hover {
+
+            transform: translateY(-2px);
+
+        }
+
+
+        .error {
+
+            background: #fff0f2;
+
+            color: #c23b4b;
+
+            padding: 12px;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #a0a5b7;
+
+            font-size: 11px;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-box">
+
+
+    <div class="logo">
+
+        Ticket<span>ing</span>
+
+    </div>
+
+
+    <div class="subtitle">
+
+        IT Asset & Helpdesk Portal
+
+    </div>
+
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="error">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="field">
+
+            <label>
+                USERNAME
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                required>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                PASSWORD
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required>
+
+        </div>
+
+
+        <button type="submit">
+
+            Sign in to Ticketing
+
+        </button>
+
+    </form>
+
+
+    <div class="footer">
+
+        Secure IT Asset Management
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

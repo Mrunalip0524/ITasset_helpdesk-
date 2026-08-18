@@ -1,0 +1,145 @@
+{% extends 'helpdesk/base.html' %}
+
+{% block title %}
+Ticketing | Software
+{% endblock %}
+
+{% block page_title %}
+Software Licenses
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="welcome">
+
+    <h1>
+        Software Licenses 💿
+    </h1>
+    <a href="{% url 'add_software_license' %}">
+    + Add Software License
+    </a>
+
+
+
+    <p>
+        Manage software licenses assigned to employees.
+    </p>
+
+</div>
+
+
+<div class="panel">
+
+    <div class="panel-header">
+
+        <div>
+
+            <div class="panel-title">
+                License Inventory
+            </div>
+
+            <div class="panel-description">
+                Software resources managed by your organization
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% if licenses %}
+
+        <div class="asset-list">
+
+            {% for license in licenses %}
+
+                <div class="asset-card">
+
+                    <div class="asset-icon">
+                        💿
+                    </div>
+
+
+                    <div class="asset-info">
+
+                        <div class="asset-name">
+                            {{ license.software_name }}
+                        </div>
+
+                        <div class="asset-serial">
+
+                            License:
+                            {{ license.license_key }}
+
+                        </div>
+
+
+                        {% if license.assigned_to %}
+
+                            <div class="asset-serial">
+
+                                Assigned to:
+                                <strong>
+                                    {{ license.assigned_to.username }}
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if license.is_active %}
+
+                        <span class="badge">
+                            Active
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge">
+                            Inactive
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div style="
+            text-align:center;
+            padding:50px;
+            color:#8e94a9;
+        ">
+
+            <div style="font-size:45px;">
+                💿
+            </div>
+
+            <h3 style="
+                margin:15px 0 7px;
+                color:#33394f;
+            ">
+                No software licenses
+            </h3>
+
+            <p style="font-size:13px;">
+                No software licenses have been assigned yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

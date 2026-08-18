@@ -1,0 +1,157 @@
+{% extends 'helpdesk/base.html' %}
+
+{% block title %}
+Ticketing | Assets
+{% endblock %}
+
+{% block page_title %}
+Hardware Assets
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="welcome">
+
+    <h1>
+        Hardware Assets 💻
+    </h1>
+
+    <p>
+        {% if request.user.is_staff %}
+            Manage and assign company hardware.
+        {% else %}
+            View the hardware assigned to you.
+        {% endif %}
+    </p>
+
+</div>
+
+
+<div class="panel">
+
+    <div class="panel-header">
+
+        <div>
+
+            <div class="panel-title">
+                Asset Inventory
+            </div>
+
+            <div class="panel-description">
+                Hardware registered in the Ticketing Portal
+            </div>
+
+        </div>
+
+
+        {% if request.user.is_staff %}
+
+        <a href="{% url 'add_asset' %}"
+           class="btn">
+
+            + Add Asset
+
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+    {% if assets %}
+
+        <div class="asset-list">
+
+            {% for asset in assets %}
+
+                <div class="asset-card">
+
+                    <div class="asset-icon">
+                        💻
+                    </div>
+
+
+                    <div class="asset-info">
+
+                        <div class="asset-name">
+                            {{ asset.asset_name }}
+                        </div>
+
+                        <div class="asset-serial">
+
+                            {{ asset.asset_type }}
+                            ·
+                            {{ asset.serial_number }}
+
+                        </div>
+
+
+                        {% if request.user.is_staff and asset.assigned_to %}
+
+                            <div class="asset-serial">
+
+                                Assigned to:
+                                <strong>
+                                    {{ asset.assigned_to.username }}
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if asset.is_active %}
+
+                        <span class="badge">
+                            Active
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge">
+                            Inactive
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div style="
+            text-align:center;
+            padding:50px;
+            color:#8e94a9;
+        ">
+
+            <div style="font-size:45px;">
+                💻
+            </div>
+
+            <h3 style="
+                margin:15px 0 7px;
+                color:#33394f;
+            ">
+                No assets found
+            </h3>
+
+            <p style="font-size:13px;">
+                No hardware assets are available yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

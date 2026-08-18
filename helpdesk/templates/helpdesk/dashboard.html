@@ -1,0 +1,222 @@
+{% extends 'helpdesk/base.html' %}
+
+{% block title %}
+Ticketing | Dashboard
+{% endblock %}
+
+{% block page_title %}
+Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="welcome">
+
+    <h1>
+        Welcome back, {{ request.user.username }} 👋
+    </h1>
+
+    <p>
+        {% if request.user.is_staff %}
+            Manage your company's IT assets and employee resources.
+        {% else %}
+            Here's an overview of your assigned IT resources.
+        {% endif %}
+    </p>
+
+</div>
+
+
+<div class="stats">
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <div class="stat-number">
+                    {{ hardware_count }}
+                </div>
+
+                <div class="stat-name">
+                    Hardware Assets
+                </div>
+            </div>
+
+            <div class="stat-icon">
+                💻
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <div class="stat-number">
+                    {{ software_count }}
+                </div>
+
+                <div class="stat-name">
+                    Software Licenses
+                </div>
+            </div>
+
+            <div class="stat-icon">
+                💿
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <div class="stat-number">
+                    {{ assigned_count }}
+                </div>
+
+                <div class="stat-name">
+                    Assigned Assets
+                </div>
+            </div>
+
+            <div class="stat-icon">
+                👤
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <div class="stat-number">
+                    {{ available_count }}
+                </div>
+
+                <div class="stat-name">
+                    Available Assets
+                </div>
+            </div>
+
+            <div class="stat-icon">
+                ✦
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="panel">
+
+    <div class="panel-header">
+
+        <div>
+
+            <div class="panel-title">
+                Recent Hardware Assets
+            </div>
+
+            <div class="panel-description">
+                Your latest assigned equipment
+            </div>
+
+        </div>
+
+
+        <a href="{% url 'assets' %}"
+           class="btn">
+
+            View Assets
+
+        </a>
+
+    </div>
+
+
+    {% if recent_assets %}
+
+        <div class="asset-list">
+
+            {% for asset in recent_assets %}
+
+                <div class="asset-card">
+
+                    <div class="asset-icon">
+                        {% if asset.asset_type == 'Laptop' %}
+                            💻
+                        {% elif asset.asset_type == 'Desktop' %}
+                            🖥️
+                        {% elif asset.asset_type == 'Monitor' %}
+                            🖥️
+                        {% else %}
+                            🔧
+                        {% endif %}
+                    </div>
+
+
+                    <div class="asset-info">
+
+                        <div class="asset-name">
+                            {{ asset.asset_name }}
+                        </div>
+
+                        <div class="asset-serial">
+                            Serial: {{ asset.serial_number }}
+                        </div>
+
+                    </div>
+
+
+                    {% if asset.is_active %}
+
+                        <span class="badge">
+                            Active
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge">
+                            Inactive
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p style="color:#9298aa; font-size:13px;">
+            No hardware assets assigned yet.
+        </p>
+
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'helpdesk/base.html' %}
+
+{% block title %}
+Ticketing | Add Asset
+{% endblock %}
+
+{% block page_title %}
+Add Hardware Asset
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="welcome">
+
+    <h1>
+        Add New Hardware 💻
+    </h1>
+
+    <p>
+        Register and assign a company asset to an employee.
+    </p>
+
+</div>
+
+
+<div class="form-container">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        {% for field in form %}
+
+            <div class="form-group">
+
+                {{ field.label_tag }}
+
+                {{ field }}
+
+                {% if field.errors %}
+
+                    <div style="
+                        color:#d9534f;
+                        font-size:11px;
+                        margin-top:5px;
+                    ">
+
+                        {{ field.errors }}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+
+        <button
+            type="submit"
+            class="btn"
+            style="margin-top:10px;">
+
+            Save Asset
+
+        </button>
+
+    </form>
+
+</div>
+
+
+{% endblock %}
