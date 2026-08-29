@@ -1,0 +1,89 @@
+{% extends 'helpdesk/base.html' %}
+
+{% block title %}
+Raise Ticket | IT Helpdesk
+{% endblock %}
+
+{% block page_heading %}
+Raise Support Ticket
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="hero">
+
+    <h1>
+        Raise a Support Ticket 🎫
+    </h1>
+
+    <p>
+        Report an IT problem related to your assigned hardware.
+    </p>
+
+</section>
+
+
+
+<section class="form-card">
+
+
+    <form method="post">
+
+        {% csrf_token %}
+
+
+        {% for field in form %}
+
+        <div class="form-group">
+
+            {{ field.label_tag }}
+
+            {{ field }}
+
+            {% if field.help_text %}
+
+            <small>
+                {{ field.help_text }}
+            </small>
+
+            {% endif %}
+
+
+            {% for error in field.errors %}
+
+            <div style="color:#d9415b; font-size:12px; margin-top:5px;">
+                {{ error }}
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endfor %}
+
+
+        <button type="submit"
+                class="btn btn-primary">
+
+            🎫 Raise Ticket
+
+        </button>
+
+
+        <a href="{% url 'tickets' %}"
+           class="view-btn"
+           style="margin-left:10px;">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+
+</section>
+
+
+{% endblock %}

@@ -1,222 +1,252 @@
 {% extends 'helpdesk/base.html' %}
 
 {% block title %}
-Ticketing | Dashboard
+Dashboard | IT Asset & Helpdesk
 {% endblock %}
 
-{% block page_title %}
+{% block page_heading %}
 Dashboard
 {% endblock %}
 
 
 {% block content %}
 
+<!-- HERO -->
 
-<div class="welcome">
+<section class="hero">
 
     <h1>
-        Welcome back, {{ request.user.username }} 👋
+        Welcome back, {{ request.user.first_name|default:request.user.username }} 👋
     </h1>
 
     <p>
-        {% if request.user.is_staff %}
-            Manage your company's IT assets and employee resources.
-        {% else %}
-            Here's an overview of your assigned IT resources.
-        {% endif %}
+        Manage your company's IT assets, software and support requests
+        from one place.
     </p>
 
+</section>
+
+
+<!-- STATISTICS -->
+
+<div class="stats-grid">
+
+
+    <!-- Hardware -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon icon-blue">
+            💻
+        </div>
+
+        <div class="stat-content">
+
+            <h3>
+                {{ hardware_count }}
+            </h3>
+
+            <p>
+                Hardware Assets
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Software -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon icon-purple">
+            💿
+        </div>
+
+        <div class="stat-content">
+
+            <h3>
+                {{ software_count }}
+            </h3>
+
+            <p>
+                Software Licenses
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Assigned -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon icon-green">
+            👤
+        </div>
+
+        <div class="stat-content">
+
+            <h3>
+                {{ assigned_count }}
+            </h3>
+
+            <p>
+                Assigned Assets
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Available -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon icon-orange">
+            ✦
+        </div>
+
+        <div class="stat-content">
+
+            <h3>
+                {{ available_count }}
+            </h3>
+
+            <p>
+                Available Assets
+            </p>
+
+        </div>
+
+    </div>
+
 </div>
 
 
-<div class="stats">
+
+<!-- RECENT ASSETS -->
+
+<section class="section-card">
 
 
-    <div class="stat-card">
-
-        <div class="stat-top">
-
-            <div>
-                <div class="stat-number">
-                    {{ hardware_count }}
-                </div>
-
-                <div class="stat-name">
-                    Hardware Assets
-                </div>
-            </div>
-
-            <div class="stat-icon">
-                💻
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <div class="stat-top">
-
-            <div>
-                <div class="stat-number">
-                    {{ software_count }}
-                </div>
-
-                <div class="stat-name">
-                    Software Licenses
-                </div>
-            </div>
-
-            <div class="stat-icon">
-                💿
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <div class="stat-top">
-
-            <div>
-                <div class="stat-number">
-                    {{ assigned_count }}
-                </div>
-
-                <div class="stat-name">
-                    Assigned Assets
-                </div>
-            </div>
-
-            <div class="stat-icon">
-                👤
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <div class="stat-top">
-
-            <div>
-                <div class="stat-number">
-                    {{ available_count }}
-                </div>
-
-                <div class="stat-name">
-                    Available Assets
-                </div>
-            </div>
-
-            <div class="stat-icon">
-                ✦
-            </div>
-
-        </div>
-
-    </div>
-
-
-</div>
-
-
-<div class="panel">
-
-    <div class="panel-header">
+    <div class="section-header">
 
         <div>
 
-            <div class="panel-title">
+            <h2>
                 Recent Hardware Assets
-            </div>
+            </h2>
 
-            <div class="panel-description">
+            <p>
                 Your latest assigned equipment
-            </div>
+            </p>
 
         </div>
 
 
         <a href="{% url 'assets' %}"
-           class="btn">
+           class="view-btn">
 
-            View Assets
+            View Assets →
 
         </a>
 
     </div>
 
 
+
     {% if recent_assets %}
 
-        <div class="asset-list">
-
-            {% for asset in recent_assets %}
-
-                <div class="asset-card">
-
-                    <div class="asset-icon">
-                        {% if asset.asset_type == 'Laptop' %}
-                            💻
-                        {% elif asset.asset_type == 'Desktop' %}
-                            🖥️
-                        {% elif asset.asset_type == 'Monitor' %}
-                            🖥️
-                        {% else %}
-                            🔧
-                        {% endif %}
-                    </div>
+    <div class="asset-grid">
 
 
-                    <div class="asset-info">
-
-                        <div class="asset-name">
-                            {{ asset.asset_name }}
-                        </div>
-
-                        <div class="asset-serial">
-                            Serial: {{ asset.serial_number }}
-                        </div>
-
-                    </div>
+        {% for asset in recent_assets %}
 
 
-                    {% if asset.is_active %}
+        <div class="asset-card">
 
-                        <span class="badge">
-                            Active
-                        </span>
 
-                    {% else %}
+            <div class="asset-top">
 
-                        <span class="badge">
-                            Inactive
-                        </span>
 
-                    {% endif %}
-
+                <div class="asset-icon">
+                    💻
                 </div>
 
-            {% endfor %}
+
+                {% if asset.is_active %}
+
+                <span class="status status-active">
+                    Active
+                </span>
+
+                {% else %}
+
+                <span class="status status-inactive">
+                    Inactive
+                </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+            <h3>
+                {{ asset.asset_name }}
+            </h3>
+
+
+            <p>
+                Serial: {{ asset.serial_number }}
+            </p>
+
+
+            {% if asset.asset_type %}
+
+            <p>
+                Type: {{ asset.asset_type }}
+            </p>
+
+            {% endif %}
+
 
         </div>
 
+
+        {% endfor %}
+
+
+    </div>
+
+
     {% else %}
 
-        <p style="color:#9298aa; font-size:13px;">
-            No hardware assets assigned yet.
+
+    <div class="empty-state">
+
+        <div class="empty-state-icon">
+            💻
+        </div>
+
+        <h3>
+            No hardware assets found
+        </h3>
+
+        <p>
+            Assets assigned to you will appear here.
         </p>
+
+    </div>
+
 
     {% endif %}
 
-</div>
+
+</section>
 
 
 {% endblock %}

@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import HardwareAsset, SoftwareLicense
-from .forms import HardwareAssetForm, SoftwareLicenseForm 
+from .models import HardwareAsset, SoftwareLicense, Ticket
+from .forms import HardwareAssetForm, SoftwareLicenseForm, TicketForm
 
 
 def login_view(request):
@@ -209,3 +209,116 @@ def add_software_license(request):
             'form': form
         }
     )
+@login_required
+def create_ticket(request):
+
+    if request.user.is_staff:
+        messages.error(
+            request,
+            'IT Support does not raise employee tickets.'
+        )
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+
+        form = TicketForm(request.POST)
+
+        form.fields['asset'].queryset = HardwareAsset.objects.filter(
+            assigned_to=request.user
+        )
+
+        if form.is_valid():
+
+            ticket = form.save(commit=False)
+
+            ticket.created_by = request.user
+
+            ticket.status = 'OPEN'
+
+            ticket.save()
+
+            messages.success(
+                request,
+                'Ticket raised successfully!'
+            )
+
+            return redirect('tickets')
+
+    else:
+
+        form = TicketForm()
+
+        form.fields['asset'].queryset = HardwareAsset.objects.filter(
+            assigned_to=request.user
+        )
+
+    return render(
+        request,
+        'helpdesk/ticket_form.html',
+        {
+            'form': form
+        }
+    )
+
+@login_required
+def tickets(request):
+
+    if request.user.is_staff:
+        ticket_list = Ticket.objects.all().order_by('-id')
+    else:
+        ticket_list = Ticket.objects.filter(
+            created_by=request.user
+        ).order_by('-id')
+
+    return render(
+        request,
+        'helpdesk/tickets.html',
+        {
+            'tickets': ticket_list
+        }
+    )
+
+@login_required
+def update_ticket_status(request, ticket_id):
+
+    if not request.user.is_staff:
+        messages.error(
+            request,
+            'Only IT Support can update ticket status.'
+        )
+        return redirect('tickets')
+
+    ticket = get_object_or_404(
+        Ticket,
+        id=ticket_id
+    )
+
+    if request.method == 'POST':
+
+        new_status = request.POST.get('status')
+
+        allowed_transitions = {
+            'OPEN': ['IN_PROGRESS'],
+            'IN_PROGRESS': ['RESOLVED'],
+            'RESOLVED': ['CLOSED'],
+            'CLOSED': [],
+        }
+
+        if new_status in allowed_transitions[ticket.status]:
+
+            ticket.status = new_status
+            ticket.save()
+
+            messages.success(
+                request,
+                'Ticket status updated successfully.'
+            )
+
+        else:
+
+            messages.error(
+                request,
+                'Invalid ticket status transition.'
+            )
+
+    return redirect('tickets')

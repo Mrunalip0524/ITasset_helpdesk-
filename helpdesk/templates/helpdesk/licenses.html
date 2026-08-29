@@ -1,10 +1,10 @@
 {% extends 'helpdesk/base.html' %}
 
 {% block title %}
-Ticketing | Software
+Software Licenses | IT Helpdesk
 {% endblock %}
 
-{% block page_title %}
+{% block page_heading %}
 Software Licenses
 {% endblock %}
 
@@ -12,134 +12,152 @@ Software Licenses
 {% block content %}
 
 
-<div class="welcome">
+<section class="hero">
 
     <h1>
         Software Licenses 💿
     </h1>
-    <a href="{% url 'add_software_license' %}">
-    + Add Software License
-    </a>
-
-
 
     <p>
         Manage software licenses assigned to employees.
     </p>
 
-</div>
+</section>
 
 
-<div class="panel">
 
-    <div class="panel-header">
+<section class="section-card">
+
+
+    <div class="section-header">
 
         <div>
 
-            <div class="panel-title">
+            <h2>
                 License Inventory
-            </div>
+            </h2>
 
-            <div class="panel-description">
+            <p>
                 Software resources managed by your organization
-            </div>
-
-        </div>
-
-    </div>
-
-
-    {% if licenses %}
-
-        <div class="asset-list">
-
-            {% for license in licenses %}
-
-                <div class="asset-card">
-
-                    <div class="asset-icon">
-                        💿
-                    </div>
-
-
-                    <div class="asset-info">
-
-                        <div class="asset-name">
-                            {{ license.software_name }}
-                        </div>
-
-                        <div class="asset-serial">
-
-                            License:
-                            {{ license.license_key }}
-
-                        </div>
-
-
-                        {% if license.assigned_to %}
-
-                            <div class="asset-serial">
-
-                                Assigned to:
-                                <strong>
-                                    {{ license.assigned_to.username }}
-                                </strong>
-
-                            </div>
-
-                        {% endif %}
-
-                    </div>
-
-
-                    {% if license.is_active %}
-
-                        <span class="badge">
-                            Active
-                        </span>
-
-                    {% else %}
-
-                        <span class="badge">
-                            Inactive
-                        </span>
-
-                    {% endif %}
-
-                </div>
-
-            {% endfor %}
-
-        </div>
-
-    {% else %}
-
-        <div style="
-            text-align:center;
-            padding:50px;
-            color:#8e94a9;
-        ">
-
-            <div style="font-size:45px;">
-                💿
-            </div>
-
-            <h3 style="
-                margin:15px 0 7px;
-                color:#33394f;
-            ">
-                No software licenses
-            </h3>
-
-            <p style="font-size:13px;">
-                No software licenses have been assigned yet.
             </p>
 
         </div>
 
+
+        {% if user.is_staff %}
+
+        <a href="{% url 'add_software_license' %}"
+           class="btn btn-primary">
+
+            ＋ Add Software License
+
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+
+    {% if licenses %}
+
+
+    <div class="asset-grid">
+
+        {% for license in licenses %}
+
+        <div class="asset-card">
+
+
+            <div class="asset-top">
+
+                <div class="asset-icon">
+                    💿
+                </div>
+
+
+                {% if license.is_active %}
+
+                <span class="status status-active">
+                    Active
+                </span>
+
+                {% else %}
+
+                <span class="status status-inactive">
+                    Inactive
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <h3>
+                {{ license.software_name }}
+            </h3>
+
+
+            <p>
+                License:
+                {{ license.license_key }}
+            </p>
+
+
+            <p>
+
+                Assigned to:
+
+                {% if license.assigned_to %}
+
+                    {{ license.assigned_to.username }}
+
+                {% else %}
+
+                    Unassigned
+
+                {% endif %}
+
+            </p>
+
+
+            <p>
+                Expiry:
+                {{ license.expiry_date }}
+            </p>
+
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    {% else %}
+
+
+    <div class="empty-state">
+
+        <div class="empty-state-icon">
+            💿
+        </div>
+
+        <h3>
+            No software licenses found
+        </h3>
+
+        <p>
+            Software licenses will appear here.
+        </p>
+
+    </div>
+
+
     {% endif %}
 
-</div>
+
+</section>
 
 
 {% endblock %}

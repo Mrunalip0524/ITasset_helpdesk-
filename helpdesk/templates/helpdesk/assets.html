@@ -1,10 +1,10 @@
 {% extends 'helpdesk/base.html' %}
 
 {% block title %}
-Ticketing | Assets
+Hardware Assets | IT Helpdesk
 {% endblock %}
 
-{% block page_title %}
+{% block page_heading %}
 Hardware Assets
 {% endblock %}
 
@@ -12,46 +12,44 @@ Hardware Assets
 {% block content %}
 
 
-<div class="welcome">
+<section class="hero">
 
     <h1>
         Hardware Assets 💻
     </h1>
 
     <p>
-        {% if request.user.is_staff %}
-            Manage and assign company hardware.
-        {% else %}
-            View the hardware assigned to you.
-        {% endif %}
+        Manage company hardware and employee assignments.
     </p>
 
-</div>
+</section>
 
 
-<div class="panel">
 
-    <div class="panel-header">
+<section class="section-card">
+
+
+    <div class="section-header">
 
         <div>
 
-            <div class="panel-title">
+            <h2>
                 Asset Inventory
-            </div>
+            </h2>
 
-            <div class="panel-description">
-                Hardware registered in the Ticketing Portal
-            </div>
+            <p>
+                Hardware resources managed by your organization
+            </p>
 
         </div>
 
 
-        {% if request.user.is_staff %}
+        {% if user.is_staff %}
 
         <a href="{% url 'add_asset' %}"
-           class="btn">
+           class="btn btn-primary">
 
-            + Add Asset
+            ＋ Add Hardware
 
         </a>
 
@@ -60,98 +58,91 @@ Hardware Assets
     </div>
 
 
+
     {% if assets %}
 
-        <div class="asset-list">
 
-            {% for asset in assets %}
+    <div class="asset-grid">
 
-                <div class="asset-card">
+        {% for asset in assets %}
 
-                    <div class="asset-icon">
-                        💻
-                    </div>
+        <div class="asset-card">
 
 
-                    <div class="asset-info">
+            <div class="asset-top">
 
-                        <div class="asset-name">
-                            {{ asset.asset_name }}
-                        </div>
-
-                        <div class="asset-serial">
-
-                            {{ asset.asset_type }}
-                            ·
-                            {{ asset.serial_number }}
-
-                        </div>
-
-
-                        {% if request.user.is_staff and asset.assigned_to %}
-
-                            <div class="asset-serial">
-
-                                Assigned to:
-                                <strong>
-                                    {{ asset.assigned_to.username }}
-                                </strong>
-
-                            </div>
-
-                        {% endif %}
-
-                    </div>
-
-
-                    {% if asset.is_active %}
-
-                        <span class="badge">
-                            Active
-                        </span>
-
-                    {% else %}
-
-                        <span class="badge">
-                            Inactive
-                        </span>
-
-                    {% endif %}
-
+                <div class="asset-icon">
+                    💻
                 </div>
 
-            {% endfor %}
+
+                {% if asset.is_active %}
+
+                <span class="status status-active">
+                    Active
+                </span>
+
+                {% else %}
+
+                <span class="status status-inactive">
+                    Inactive
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <h3>
+                {{ asset.asset_name }}
+            </h3>
+
+
+            <p>
+                Serial Number:
+                {{ asset.serial_number }}
+            </p>
+
+
+            <p>
+                Assigned To:
+                {% if asset.assigned_to %}
+                    {{ asset.assigned_to.username }}
+                {% else %}
+                    Available
+                {% endif %}
+            </p>
+
 
         </div>
+
+        {% endfor %}
+
+    </div>
+
 
     {% else %}
 
-        <div style="
-            text-align:center;
-            padding:50px;
-            color:#8e94a9;
-        ">
+    <div class="empty-state">
 
-            <div style="font-size:45px;">
-                💻
-            </div>
-
-            <h3 style="
-                margin:15px 0 7px;
-                color:#33394f;
-            ">
-                No assets found
-            </h3>
-
-            <p style="font-size:13px;">
-                No hardware assets are available yet.
-            </p>
-
+        <div class="empty-state-icon">
+            💻
         </div>
+
+        <h3>
+            No assets found
+        </h3>
+
+        <p>
+            There are currently no hardware assets available.
+        </p>
+
+    </div>
 
     {% endif %}
 
-</div>
+
+</section>
 
 
 {% endblock %}

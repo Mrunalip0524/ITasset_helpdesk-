@@ -1,0 +1,279 @@
+{% extends 'helpdesk/base.html' %}
+
+{% block title %}
+Tickets | IT Helpdesk
+{% endblock %}
+
+{% block page_heading %}
+Support Tickets
+{% endblock %}
+
+
+{% block content %}
+
+
+<section class="hero">
+
+    <h1>
+        Support Tickets 🎫
+    </h1>
+
+    <p>
+        Track and manage IT support requests.
+    </p>
+
+</section>
+
+
+
+<section class="section-card">
+
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                Ticket Management
+            </h2>
+
+            <p>
+                View and track your support requests.
+            </p>
+
+        </div>
+
+
+        {% if not user.is_staff %}
+
+        <a href="{% url 'create_ticket' %}"
+           class="btn btn-primary">
+
+            ＋ Raise Ticket
+
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+
+    {% if tickets %}
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Ticket
+                    </th>
+
+                    <th>
+                        Title
+                    </th>
+
+                    <th>
+                        Asset
+                    </th>
+
+                    <th>
+                        Priority
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Created By
+                    </th>
+
+                    {% if user.is_staff %}
+
+                    <th>
+                        Action
+                    </th>
+
+                    {% endif %}
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for ticket in tickets %}
+
+                <tr>
+
+                    <td>
+                        #{{ ticket.id }}
+                    </td>
+
+
+                    <td>
+                        {{ ticket.title }}
+                    </td>
+
+
+                    <td>
+
+                        {% if ticket.asset %}
+
+                            {{ ticket.asset.asset_name }}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ ticket.priority }}
+                    </td>
+
+
+                    <td>
+
+                        <span class="status status-active">
+
+                            {{ ticket.status }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+                        {{ ticket.created_by.username }}
+                    </td>
+
+
+                    {% if user.is_staff %}
+
+                    <td>
+
+
+                        {% if ticket.status == 'OPEN' %}
+
+                        <form method="post"
+                              action="{% url 'update_ticket_status' ticket.id %}">
+
+                            {% csrf_token %}
+
+                            <input type="hidden"
+                                   name="status"
+                                   value="IN_PROGRESS">
+
+                            <button class="btn btn-primary"
+                                    type="submit">
+
+                                Start
+
+                            </button>
+
+                        </form>
+
+
+                        {% elif ticket.status == 'IN_PROGRESS' %}
+
+                        <form method="post"
+                              action="{% url 'update_ticket_status' ticket.id %}">
+
+                            {% csrf_token %}
+
+                            <input type="hidden"
+                                   name="status"
+                                   value="RESOLVED">
+
+                            <button class="btn btn-primary"
+                                    type="submit">
+
+                                Resolve
+
+                            </button>
+
+                        </form>
+
+
+                        {% elif ticket.status == 'RESOLVED' %}
+
+                        <form method="post"
+                              action="{% url 'update_ticket_status' ticket.id %}">
+
+                            {% csrf_token %}
+
+                            <input type="hidden"
+                                   name="status"
+                                   value="CLOSED">
+
+                            <button class="btn btn-primary"
+                                    type="submit">
+
+                                Close
+
+                            </button>
+
+                        </form>
+
+                        {% else %}
+
+                            <span class="status status-active">
+                                Closed
+                            </span>
+
+                        {% endif %}
+
+
+                    </td>
+
+                    {% endif %}
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+
+    <div class="empty-state">
+
+        <div class="empty-state-icon">
+            🎫
+        </div>
+
+        <h3>
+            No tickets found
+        </h3>
+
+        <p>
+            Your support tickets will appear here.
+        </p>
+
+    </div>
+
+
+    {% endif %}
+
+
+</section>
+
+
+{% endblock %}
