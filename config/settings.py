@@ -16,7 +16,9 @@ SECRET_KEY = 'django-insecure-cek5mzpesk586+v&*()@$fe9)abvqz)pni)1@ake%%@v3^hfyt
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://itassethelpdesk-production.up.railway.app',
+]
 
 # Application definition
 
